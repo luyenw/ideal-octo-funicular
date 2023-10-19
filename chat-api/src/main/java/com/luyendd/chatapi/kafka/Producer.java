@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Producer {
-    @Autowired
+//    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendMessage(String msg) {

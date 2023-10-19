@@ -1,5 +1,7 @@
-package com.luyendd.chatapi.message;
+package com.luyendd.chatapi.group;
 
+
+import com.luyendd.chatapi.message.Message;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -11,21 +13,16 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import org.springframework.data.cassandra.core.mapping.Table;
 
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.UUID;
 
 @AllArgsConstructor
-@Table("messages_by_group")
+@Table("groups_by_user")
 @Data
 @Getter
 @Setter
-public class Message {
-    @PrimaryKeyColumn(name="group_id", type = PrimaryKeyType.PARTITIONED)
+public class Group {
+    @PrimaryKeyColumn(name = "group_id", type = PrimaryKeyType.CLUSTERED)
     private UUID groupId;
-    @PrimaryKeyColumn(name="message_id", type = PrimaryKeyType.CLUSTERED)
-    private UUID messageId;
-    @Column("message")
-    private String message;
-    @Column("user_id")
+    @PrimaryKeyColumn(name = "user_id", type = PrimaryKeyType.PARTITIONED)
     private String userId;
 }

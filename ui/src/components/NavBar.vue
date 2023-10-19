@@ -44,7 +44,6 @@ const setup = (props) => {
   const router = useRouter();
   const user = ref({});
   user.value = props.data;
-  console.log(props.data);
   const logout = (e) => {
     e.preventDefault();
     store.commit("setUser", null);

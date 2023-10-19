@@ -3,7 +3,7 @@ const axios = require("axios");
 const User = require("../schemas/User");
 const controller = {
   verify: async (req, res) => {
-    const access_token = req.cookies.access_token;
+    const access_token = req.cookies.access_token || req.headers.authorization?.split(' ')[1];
     if (!access_token) return res.status(401).send("denied");
     const query = `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`;
     console.log(query);

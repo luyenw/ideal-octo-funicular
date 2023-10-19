@@ -7,6 +7,8 @@
         <div class="relative px-4">
           <label for="Search" class="sr-only"> Search </label>
           <input
+            @input="find_user_onchange"
+            v-model="find_user_input"
             type="text"
             id="search"
             placeholder="Search"
@@ -35,163 +37,13 @@
         </div>
       </div>
       <!-- message list -->
-      <div class="mt-4">
-        <div
-          class="bg-white px-4 flex items-center hover:bg-gray-100 cursor-pointer"
-        >
-          <div>
-            <img class="h-12 w-12 rounded-full" :src="user?.picture" />
-          </div>
-          <div class="ml-4 flex-1 border-b border-grey-lighter py-4">
-            <div class="flex items-bottom justify-between">
-              <p class="text-grey-darkest">{{ user?.name }}</p>
-              <p class="text-xs text-grey-darkest">12:45 pm</p>
-            </div>
-            <p class="text-grey-dark mt-1 text-sm">I'll be back</p>
-          </div>
-        </div>
-      </div>
+      <MainRecentMessage />
       <!-- end item -->
     </div>
     <!-- end left -->
     <!-- right -->
     <div class="w-3/4 flex flex-col">
-      <!-- Header -->
-      <div
-        class="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center"
-      >
-        <div class="flex items-center">
-          <div>
-            <img
-              class="w-10 h-10 rounded-full"
-              src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg"
-            />
-          </div>
-          <div class="ml-4">
-            <p class="text-grey-darkest">New Movie! Expendables 4</p>
-            <p class="text-grey-darker text-xs mt-1">
-              Andrés, Tom, Harrison, Arnold, Sylvester
-            </p>
-          </div>
-        </div>
-
-        <div class="flex">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path
-                fill="#263238"
-                fill-opacity=".5"
-                d="M15.9 14.3H15l-.3-.3c1-1.1 1.6-2.7 1.6-4.3 0-3.7-3-6.7-6.7-6.7S3 6 3 9.7s3 6.7 6.7 6.7c1.6 0 3.2-.6 4.3-1.6l.3.3v.8l5.1 5.1 1.5-1.5-5-5.2zm-6.2 0c-2.6 0-4.6-2.1-4.6-4.6s2.1-4.6 4.6-4.6 4.6 2.1 4.6 4.6-2 4.6-4.6 4.6z"
-              ></path>
-            </svg>
-          </div>
-          <div class="ml-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path
-                fill="#263238"
-                fill-opacity=".5"
-                d="M1.816 15.556v.002c0 1.502.584 2.912 1.646 3.972s2.472 1.647 3.974 1.647a5.58 5.58 0 0 0 3.972-1.645l9.547-9.548c.769-.768 1.147-1.767 1.058-2.817-.079-.968-.548-1.927-1.319-2.698-1.594-1.592-4.068-1.711-5.517-.262l-7.916 7.915c-.881.881-.792 2.25.214 3.261.959.958 2.423 1.053 3.263.215l5.511-5.512c.28-.28.267-.722.053-.936l-.244-.244c-.191-.191-.567-.349-.957.04l-5.506 5.506c-.18.18-.635.127-.976-.214-.098-.097-.576-.613-.213-.973l7.915-7.917c.818-.817 2.267-.699 3.23.262.5.501.802 1.1.849 1.685.051.573-.156 1.111-.589 1.543l-9.547 9.549a3.97 3.97 0 0 1-2.829 1.171 3.975 3.975 0 0 1-2.83-1.173 3.973 3.973 0 0 1-1.172-2.828c0-1.071.415-2.076 1.172-2.83l7.209-7.211c.157-.157.264-.579.028-.814L11.5 4.36a.572.572 0 0 0-.834.018l-7.205 7.207a5.577 5.577 0 0 0-1.645 3.971z"
-              ></path>
-            </svg>
-          </div>
-          <div class="ml-6">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              width="24"
-              height="24"
-            >
-              <path
-                fill="#263238"
-                fill-opacity=".6"
-                d="M12 7a2 2 0 1 0-.001-4.001A2 2 0 0 0 12 7zm0 2a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 9zm0 6a2 2 0 1 0-.001 3.999A2 2 0 0 0 12 15z"
-              ></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Messages -->
-      <div class="flex-1 overflow-auto" style="background-color: #dad3cc">
-        <div class="py-2 px-3">
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-teal">Sylverter Stallone</p>
-              <p class="text-sm mt-1">
-                Hi everyone! Glad you could join! I am making a new movie.
-              </p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-purple">Tom Cruise</p>
-              <p class="text-sm mt-1">
-                Hi all! I have one question for the movie
-              </p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-orange">Harrison Ford</p>
-              <p class="text-sm mt-1">Again?</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-orange">Russell Crowe</p>
-              <p class="text-sm mt-1">Is Andrés coming for this one?</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-teal">Sylverter Stallone</p>
-              <p class="text-sm mt-1">He is. Just invited him to join.</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex justify-end mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #e2f7cb">
-              <p class="text-sm mt-1">Hi guys.</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex justify-end mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #e2f7cb">
-              <p class="text-sm mt-1">Count me in</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-
-          <div class="flex mb-2">
-            <div class="rounded py-2 px-3" style="background-color: #f2f2f2">
-              <p class="text-sm text-purple">Tom Cruise</p>
-              <p class="text-sm mt-1">Get Andrés on this movie ASAP!</p>
-              <p class="text-right text-xs text-grey-dark mt-1">12:45 pm</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <ConversationContainer />
       <!-- Input -->
       <div class="bg-grey-lighter px-4 py-4 flex items-center">
         <div>
@@ -239,13 +91,12 @@
   </div>
 </template>
 <script>
+import ConversationContainer from "@/components/pages/ConversationContainer.vue";
+import MainRecentMessage from "@/components/pages/MainRecentMessage.vue";
 import axios from "axios";
-import { useStore } from "vuex";
 import { useRouter } from "vue-router";
+import { mapGetters, useStore } from "vuex";
 import NavBar from "../NavBar.vue";
-import { mapGetters } from "vuex";
-import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
 export default {
   name: "MainPage",
   setup() {
@@ -265,42 +116,33 @@ export default {
   data() {
     return {
       message_input: "",
+      find_user_input: "",
     };
   },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "conversation", "socket"]),
   },
   methods: {
     sent(e) {
       e.preventDefault();
-      const msg = JSON.stringify({ content: this.message_input });
-      this.stompClient.send("/ws/message", msg, {});
-      this.message_input=''
+      this.socket.emit("send_message", {
+        message: this.message_input,
+        userId: this.user?.id,
+        groupId: this.conversation,
+      });
+      this.message_input = "";
+    },
+    find_user_onchange() {
+      alert(this.find_user_input);
     },
   },
   mounted() {
-    this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
-    
-    this.stompClient = Stomp.over(this.socket);
-    this.stompClient.debug = () => {};
 
-    this.stompClient.connect(
-      {},
-      (frame) => {
-        frame
-        this.connected = true;
-        this.stompClient.subscribe("/topic/messages", function (message) {
-          console.log(message.body)
-        });
-      },
-      (error) => {
-        console.log(error);
-        this.connected = false;
-      }
-    );
   },
   components: {
     NavBar,
+    MainRecentMessage,
+    ConversationContainer,
   },
 };
 </script>
