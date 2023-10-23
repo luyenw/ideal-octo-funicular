@@ -6,7 +6,9 @@ export default new Vuex.Store({
     conversation: null,
     socket: null,
     detail_id: null,
-    message_list: []
+    message_list: [],
+    recent_list: [],
+    found_users: []
   },
   mutations: {
     setUser(state, user) {
@@ -28,13 +30,20 @@ export default new Vuex.Store({
     },
     appendMessageList(state, message){
       state.message_list.push(message)
+    },
+    setRecentList(state, list){
+      state.recent_list = list
+    },
+    closeSocket(state){
+      if(state.socket)
+      state.socket.disconnect()
+    },
+    setFoundUsers(state, users){
+      state.found_users = users
     }
   },
   actions: {},
   getters: {
-    isLoggedIn(state) {
-      return state.user ? true : false;
-    },
     user(state) {
       return state.user;
     },
@@ -49,6 +58,12 @@ export default new Vuex.Store({
     },
     messageList(state){
       return state.message_list
+    },
+    recentList(state){
+      return state.recent_list
+    },
+    foundUsers(state){
+      return state.found_users
     }
   },
 });

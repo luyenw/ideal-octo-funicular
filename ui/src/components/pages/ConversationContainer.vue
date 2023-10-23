@@ -14,8 +14,12 @@
   </div>
 
   <!-- Messages -->
-  <div class="flex-1 overflow-auto" style="background-color: #dad3cc">
-    <div class="py-2 px-3" v-for="(item, index) in messageList" :key="index">
+  <div
+    class="flex-1 overflow-auto"
+    id="parentDiv"
+    style="background-color: #dad3cc"
+  >
+    <div class="py-1 px-2" v-for="(item, index) in messageList" :key="index">
       <MessageItem :data="item" :ownMessage="item.userId == user.id" />
     </div>
   </div>
@@ -23,14 +27,17 @@
 <script>
 import MessageItem from "@/components/pages/ConversationMessageItem.vue";
 import axios from "axios";
+import { useRouter } from "vue-router";
 import { mapGetters, useStore } from "vuex";
 export default {
   name: "ConversationContainer",
   setup() {
-    const store = useStore()
+    const store = useStore();
+    const router = useRouter();
     return {
-      store
-    }
+      store,
+      router,
+    };
   },
   computed: {
     ...mapGetters(["conversation", "user", "detail_id", "messageList"]),
@@ -45,14 +52,29 @@ export default {
       oldValue;
       newValue;
       try {
-        var response = await axios.get(`http://localhost:3001/u/${this.detail_id}`);
+        var response = await axios.get(
+          `http://localhost:3001/u/${this.detail_id}`
+        );
         this.groupData = await response.data;
 
-        response = await axios.get(`http://localhost:8080/message/${this.detail_id}`);
-        this.store.commit('setMessageList', response.data)
+        response = await axios.get(
+          `http://localhost:8080/message/${this.conversation}`
+        );
+        this.store.commit("setMessageList", response.data);
+        if (response.data[0]) {
+          this.store.commit("setConversation", response.data[0].groupId);
+        }
       } catch (err) {
         console.log(err);
+        this.store.commit("setMessageList", []);
       }
+    },
+    /* eslint-disable */
+    messageList(newValue, oldValue) {
+      var element = document.getElementById("parentDiv");
+      const h = element.scrollHeight;
+      console.log(element);
+      element.scrollTop = h;
     },
   },
   components: {

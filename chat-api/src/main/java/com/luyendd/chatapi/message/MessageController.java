@@ -6,6 +6,7 @@ import com.luyendd.chatapi.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigInteger;
@@ -25,42 +26,56 @@ public class MessageController {
         this.messageRepository = messageRepository;
         this.groupRepository = groupRepository;
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getMessage(@PathVariable("id") String receiverId, @CookieValue String access_token){
+    private boolean isUUID(String id){
         try{
-            RestTemplate restTemplate = new RestTemplate();
-            String url = "http://localhost:3001/verify";
-            HttpHeaders headers = new HttpHeaders();
-            headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + access_token);
-            HttpEntity<?> httpEntity = new HttpEntity<>(headers);
-            ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, User.class);
-            User sender = (User) response.getBody();
-            String senderId = sender.getId();
-
-            List<UUID> groupBySender = groupRepository.findByUserId(senderId).stream().map(Group::getGroupId).collect(Collectors.toList());
-            List<UUID> groupByReceiver = groupRepository.findByUserId(receiverId).stream().map(Group::getGroupId).collect(Collectors.toList());
-            UUID commonId = commonId(groupByReceiver, groupBySender);
-            if (commonId == null) {
-                return ResponseEntity.status(200).body(new ArrayList<>());
-            }
-            return ResponseEntity.status(200).body(messageRepository.findByGroupId(commonId));
+            UUID uuid = UUID.fromString(id);
+            return true;
         }catch(Exception e){
-            e.printStackTrace();
+            return false;
+        }
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getMessage(@PathVariable("id") String groupId, @CookieValue String access_token){
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://localhost:3001/verify";
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + access_token);
+        HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+        ResponseEntity<?> response = restTemplate.exchange(url, HttpMethod.GET, httpEntity, User.class);
+        User sender = (User) response.getBody();
+        String senderId = sender.getId();
+        if(isUUID(groupId)) {
+            try {
+                // kiem tra (user_id, group_id) co trong groups_by_user
+                return ResponseEntity.status(200).body(messageRepository.findByGroupId(UUID.fromString(groupId)));
+            } catch (HttpClientErrorException.Unauthorized e) {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }else{
+            if (senderId.equals(groupId))
+                return ResponseEntity.status(200).body(new ArrayList<>());
+            List<Group> groupList1 = groupRepository.findByUserId(senderId);
+            List<Group> groupList2 = groupRepository.findByUserId(groupId);
+            UUID commonGroupId = commonGroup(groupList1, groupList2);
+            if(commonGroupId!=null) {
+                return ResponseEntity.status(200).body(messageRepository.findByGroupId(commonGroupId));
+            }
         }
         return ResponseEntity.status(200).body(new ArrayList<>());
     }
-    private UUID commonId(List<UUID> list1, List<UUID> list2){
-        for (UUID id: list1){
-            if (list2.contains(id)){
-                return id;
-            }
+    @GetMapping("/request/uuid")
+    public ResponseEntity<?> hello(){
+        return ResponseEntity.status(HttpStatus.OK).body(UUID.randomUUID());
+    }
+    public UUID commonGroup(List<Group> list1, List<Group> list2){
+        List<UUID> uuidList1 = list1.stream().map(Group::getGroupId).toList();
+        List<UUID> uuidList2 = list2.stream().map(Group::getGroupId).toList();
+        for(UUID uuid:uuidList1){
+            if(uuidList2.contains(uuid)) return uuid;
         }
         return null;
     }
-    @GetMapping("/")
-    public ResponseEntity<?> hello(){
-        return new ResponseEntity<>(List.of(messageRepository.findAll()), HttpStatus.OK);
-    }
-
 }

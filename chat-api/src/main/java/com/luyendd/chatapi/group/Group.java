@@ -2,10 +2,7 @@ package com.luyendd.chatapi.group;
 
 
 import com.luyendd.chatapi.message.Message;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
@@ -16,6 +13,7 @@ import java.math.BigInteger;
 import java.util.UUID;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Table("groups_by_user")
 @Data
 @Getter

@@ -11,9 +11,9 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Configuration
+@Configuration
 public class KafkaProducerConfig {
-//    @Bean
+    @Bean
     public ProducerFactory<String, String> producerFactory(){
         Map<String, Object> config = new HashMap<>();
         config.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
@@ -21,7 +21,7 @@ public class KafkaProducerConfig {
         config.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         return new DefaultKafkaProducerFactory<>(config);
     }
-//    @Bean
+    @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }

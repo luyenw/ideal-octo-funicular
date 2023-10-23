@@ -3,146 +3,161 @@
     <!-- left -->
     <div class="w-1/4 flex-col border-r shadow-md">
       <NavBar :data="user" />
-      <div>
-        <div class="relative px-4">
-          <label for="Search" class="sr-only"> Search </label>
-          <input
-            @input="find_user_onchange"
-            v-model="find_user_input"
-            type="text"
-            id="search"
-            placeholder="Search"
-            class="w-full px-4 rounded-full bg-gray-200 py-2.5 pe-10 sm:text-sm"
-          />
-          <span class="absolute inset-y-0 end-4 grid w-10 place-content-center">
-            <button type="button" class="text-gray-600 hover:text-gray-700">
-              <span class="sr-only">Search</span>
+      <div class="relative px-4">
+        <label for="Search" class="sr-only"> Search </label>
+        <input
+          @input="find_user_onchange"
+          @focus="search_input_focus = true"
+          @blur="search_input_focus = false"
+          v-model="search_input"
+          type="text"
+          id="search"
+          placeholder="Search"
+          class="w-full px-4 rounded-full bg-gray-200 py-2.5 pe-10 sm:text-sm"
+        />
+        <span class="absolute inset-y-0 end-4 grid w-10 place-content-center">
+          <button type="button" class="text-gray-600 hover:text-gray-700">
+            <span class="sr-only">Search</span>
 
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="h-4 w-4 mr-4"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </button>
-          </span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-4 w-4 mr-4"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+              />
+            </svg>
+          </button>
+        </span>
+      </div>
+      <div class="mt-4 px-2">
+        <div v-if="search_input == ''">
+          <MainRecentMessage />
+        </div>
+        <div v-else>
+          <MainFoundUsers />
         </div>
       </div>
-      <!-- message list -->
-      <MainRecentMessage />
-      <!-- end item -->
     </div>
-    <!-- end left -->
-    <!-- right -->
     <div class="w-3/4 flex flex-col">
       <ConversationContainer />
-      <!-- Input -->
-      <div class="bg-grey-lighter px-4 py-4 flex items-center">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-          >
-            <path
-              opacity=".45"
-              fill="#263238"
-              d="M9.153 11.603c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962zm-3.204 1.362c-.026-.307-.131 5.218 6.063 5.551 6.066-.25 6.066-5.551 6.066-5.551-6.078 1.416-12.129 0-12.129 0zm11.363 1.108s-.669 1.959-5.051 1.959c-3.505 0-5.388-1.164-5.607-1.959 0 0 5.912 1.055 10.658 0zM11.804 1.011C5.609 1.011.978 6.033.978 12.228s4.826 10.761 11.021 10.761S23.02 18.423 23.02 12.228c.001-6.195-5.021-11.217-11.216-11.217zM12 21.354c-5.273 0-9.381-3.886-9.381-9.159s3.942-9.548 9.215-9.548 9.548 4.275 9.548 9.548c-.001 5.272-4.109 9.159-9.382 9.159zm3.108-9.751c.795 0 1.439-.879 1.439-1.962s-.644-1.962-1.439-1.962-1.439.879-1.439 1.962.644 1.962 1.439 1.962z"
-            ></path>
-          </svg>
-        </div>
-        <div class="flex-1 mx-4">
-          <form @submit="sent">
-            <input
-              v-model="message_input"
-              class="w-full border rounded px-2 py-2"
-              type="text"
-              placeholder="Type your message.."
-            />
-            <input type="submit" hidden />
-          </form>
-        </div>
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            width="24"
-            height="24"
-          >
-            <path
-              fill="#263238"
-              fill-opacity=".45"
-              d="M11.999 14.942c2.001 0 3.531-1.53 3.531-3.531V4.35c0-2.001-1.53-3.531-3.531-3.531S8.469 2.35 8.469 4.35v7.061c0 2.001 1.53 3.531 3.53 3.531zm6.238-3.53c0 3.531-2.942 6.002-6.237 6.002s-6.237-2.471-6.237-6.002H3.761c0 4.001 3.178 7.297 7.061 7.885v3.884h2.354v-3.884c3.884-.588 7.061-3.884 7.061-7.885h-2z"
-            ></path>
-          </svg>
-        </div>
-      </div>
+      <ConversationInput @inputChange="handleInputChange" />
     </div>
-    <!-- end right -->
   </div>
 </template>
 <script>
 import ConversationContainer from "@/components/pages/ConversationContainer.vue";
+import ConversationInput from "@/components/pages/ConversationInput.vue";
 import MainRecentMessage from "@/components/pages/MainRecentMessage.vue";
+import MainFoundUsers from "@/components/pages/MainFoundUsers";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { mapGetters, useStore } from "vuex";
 import NavBar from "../NavBar.vue";
+import services from "@/services/index";
+import io from "socket.io-client";
 export default {
   name: "MainPage",
   setup() {
     const store = useStore();
     const router = useRouter();
-
     axios
       .get("http://localhost:3001/verify")
       .then((response) => {
         store.commit("setUser", response.data);
+        const socket = io(
+          `ws://192.168.1.123:8085?room=${store.getters["user"].id}`
+        );
+        socket.on("new_message", async () => {
+          const recent_list = await services.getRecentMessage(
+            store.getters["user"].id
+          );
+          store.commit("setRecentList", recent_list);
+        });
       })
       .catch((err) => {
         console.log(err);
         router.replace("login");
       });
+    return {
+      store,
+    };
   },
   data() {
     return {
       message_input: "",
-      find_user_input: "",
+      search_input: "",
+      search_input_focus: false,
+      debounded_search_timeout: null,
     };
   },
   computed: {
-    ...mapGetters(["user", "conversation", "socket"]),
+    ...mapGetters(["user", "conversation", "socket", "foundUsers"]),
   },
   methods: {
-    sent(e) {
-      e.preventDefault();
-      this.socket.emit("send_message", {
-        message: this.message_input,
-        userId: this.user?.id,
-        groupId: this.conversation,
-      });
+    handleInputChange(value) {
+      this.message_input = value;
+      this.sent(this.message_input);
+    },
+    sent() {
+      const new_message = {
+            message: this.message_input,
+            userId: this.user?.id,
+            groupId: this.conversation,
+          }
+      if (!this.conversation?.includes("-")) {
+        axios.get("http://localhost:8080/message/request/uuid").then((res) => {
+          this.store.commit(
+            "setSocket",
+            `ws://192.168.1.123:8085?room=${res.data}`
+          );
+          this.socket.emit('new_group', {
+            groupId: res.data,
+            userId: this.user.id
+          })
+          this.socket.emit('new_group', {
+            groupId: res.data,
+            userId: this.conversation
+          })
+          this.store.commit("setConversation", res.data);
+          new_message.groupId = this.conversation
+          this.socket.emit("send_message", new_message);
+        });
+      } else {
+        this.socket.emit("send_message", {
+          message: this.message_input,
+          userId: this.user?.id,
+          groupId: this.conversation,
+        });
+      }
+
       this.message_input = "";
     },
+    debounded_search(value) {
+      clearTimeout(this.debounded_search_timeout);
+      this.debounded_search_timeout = setTimeout(async () => {
+        const users = await services.findUser(value);
+        this.store.commit("setFoundUsers", users);
+        console.log(this.foundUsers);
+      }, 500);
+    },
     find_user_onchange() {
-      alert(this.find_user_input);
+      this.debounded_search(this.search_input);
     },
   },
-  mounted() {
-
-  },
+  mounted() {},
   components: {
     NavBar,
     MainRecentMessage,
     ConversationContainer,
+    ConversationInput,
+    MainFoundUsers,
   },
 };
 </script>

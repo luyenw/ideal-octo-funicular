@@ -1,7 +1,7 @@
 <template>
-  <div :class="ownMessage?'justify-end':''" class="flex mb-2">
-    <div class="rounded py-2 px-3" :class="ownMessage?'bg-lime-100':'bg-sky-100'">
-      <p class="text-sm mt-1">{{ data.message }}</p>
+  <div id="message-container" :class="ownMessage?'justify-end':''" class="flex">
+    <div class="rounded p-2" :class="ownMessage?'bg-lime-100':'bg-sky-100'">
+      <p class="text-sm">{{ data.message }}</p>
       <p class="text-right text-xs text-grey-dark mt-1">{{ timeago(data.messageId) }}</p>
     </div>
   </div>

@@ -46,7 +46,13 @@ const setup = (props) => {
   user.value = props.data;
   const logout = (e) => {
     e.preventDefault();
-    store.commit("setUser", null);
+    // store.commit("setUser", null);
+    store.commit("setConversation", null)
+    store.commit("setConversation", null)
+    store.commit("setConversation", null)
+    store.commit("closeSocket")
+    store.commit("setMessageList", [])
+    store.commit("setRecentList", [])
     document.cookie =
       "access_token=; expires=" + new Date() + "; domain=localhost;Path=/";
     router.push("/login");

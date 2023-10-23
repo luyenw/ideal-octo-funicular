@@ -1,3 +1,7 @@
 .vscode
 ui/node_modules
 auth/node_modules
+
+chat-api/mvnw
+chat-api/mvnw.cmd
+chat-api/.mvn

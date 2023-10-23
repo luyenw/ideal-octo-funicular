@@ -2,12 +2,14 @@ package com.luyendd.chatapi.group;
 
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.cassandra.repository.config.EnableCassandraRepositories;
 import org.springframework.data.repository.query.Param;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.UUID;
 
+@EnableCassandraRepositories
 public interface GroupRepository extends CassandraRepository<Group, String> {
     @Query("select * from groups_by_user where user_id=:user_id;")
     List<Group> findByUserId(@Param("user_id") String user_id);
